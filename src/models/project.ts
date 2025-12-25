@@ -86,7 +86,7 @@ export const SearchProjectResult = z.object({
         icon: z.custom<Icon>(),
         color: z.custom<Color>(),
         status: z.enum(["active", "archived", "all"]),
-        spacePHID: z.unknown(),
+        spacePHID: z.custom<PHID<"SPCE">>(),
         dateCreated: z.number(),
         dateModified: z.number(),
         policy: z.custom<Policy>(),

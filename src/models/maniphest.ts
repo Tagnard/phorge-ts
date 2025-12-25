@@ -67,7 +67,7 @@ export const SearchTaskResult = z.object({
         closePHID: z.custom<PHID<"USER">>,
         dateClosed: z.number(),
         groupByProjectPHID: z.unknown(), // TODO: Needs to be implemented
-        spacePHID: z.unknown(), // TODO: Needs to be implemented
+        spacePHID: z.custom<PHID<"SPCE">>(), // TODO: Needs to be implemented
         dateCreated: z.number(),
         dateModified: z.number(),
         policy: z.custom<Policy>(),
