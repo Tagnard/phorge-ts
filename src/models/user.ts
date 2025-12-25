@@ -1,0 +1,55 @@
+import * as z from "zod"
+import type { ApiResponse, CreateObjectResult, PHID } from "./phorge.js"
+
+export const UserConstraints = z.object({
+    ids: z.number().array().nonempty().optional(),
+    phids: z.custom<PHID<"USER">>().array().nonempty().optional(),
+    usernames: z.string().array().nonempty().optional(),
+    nameLike: z.string().nonempty().optional(),
+    isAdmin: z.boolean().optional(),
+    isDisabled: z.boolean().optional(),
+    isBot: z.boolean().optional(),
+    isMailingList: z.boolean().optional(),
+    needsApproval: z.boolean().optional(),
+    mfa: z.boolean().optional(),
+    createdStart: z.number().optional(),
+    createdEnd: z.number().optional(),
+    query: z.string().nonempty().optional()
+})
+
+export type UserConstraints = z.infer<typeof UserConstraints>
+
+export const UserSearchOptions = z.object({
+    queryKey: z.string().optional(),
+    constraints: z.custom<UserConstraints>().optional(),
+    attachments: z.unknown().optional(),
+    order: z.enum(["priority", "updated", "outdated", "newest", "oldest", "closed", "title", "relevance"]).optional(),
+    before: z.number().optional(),
+    after: z.number().optional(),
+    limit: z.number().optional()
+})
+
+export type UserSearchOptions = z.infer<typeof UserSearchOptions>
+
+export const SearchUserResult = z.object({
+    id: z.number(),
+    type: z.literal("USER"),
+    phid: z.custom<PHID<"USER">>(),
+    fields: z.object({
+        username: z.string(),
+        realName: z.string(),
+        roles: z.string().array(),
+        dateCreated: z.number(),
+        dateModified: z.number(),
+        policy: z.object({
+            view: z.string(),
+            edit: z.string()
+        })
+    }),
+    attachments: z.unknown()
+}).array()
+
+export type SearchUserResult = z.infer<typeof SearchUserResult>
+
+export type CreateUserResponse = ApiResponse<{ object: CreateObjectResult }>
+export type SearchUserResponse = ApiResponse<{ data: SearchUserResult }>
