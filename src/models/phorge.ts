@@ -7,12 +7,6 @@ export type ObjectPHID<TYPE extends ObjectType | string = ObjectType> = `PHID-${
 export type TransactionPHID<TYPE extends ObjectType | string = ObjectType> = `PHID-XACT-${TYPE}-${string}`
 export type PHID<TYPE extends ObjectType | string = ObjectType> = ObjectPHID<TYPE> | TransactionPHID<TYPE>
 
-export type List<T> = {
-    add?: [T, ...T[]],
-    remove?: [T, ...T[]],
-    set?: [T, ...T[]]
-}
-
 export type ManiphestAPI = "maniphest.search"
 export type ProjectAPI = "project.search"
 
