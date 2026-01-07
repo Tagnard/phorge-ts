@@ -14,10 +14,6 @@ import type { SearchUserResponse } from "./models/user.js";
 export class Client {
     constructor(private uri: string, private token: string) { }
 
-    private async fetch<T>(input: RequestInfo | URL, init?: RequestInit) {
-        return await fetch(input, init)
-    }
-
     private async call<T>(api: string, params: URLSearchParams): Promise<T> {
         let resp = await fetch(`${this.uri}/api/${api}`, {
             method: "POST",
@@ -155,7 +151,7 @@ export class Client {
                 params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
             }
             if (options.order) {
-                // TODO: Improve order type
+                // TODO: Implement order type
             }
             if (options.before) {
                 params.append("before", options.before.toString());
