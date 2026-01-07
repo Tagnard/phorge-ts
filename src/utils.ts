@@ -57,3 +57,12 @@ export function TransactionObjectToParams(obj: Record<string, any>, prefix = "")
     }
     return params;
 }
+
+export function AttachmentsObjectToParams(obj: Record<string, any>): URLSearchParams {
+    const params = new URLSearchParams();
+    for (const [k, v] of Object.entries(obj)) {
+        const value = typeof v === "string" ? v : JSON.stringify(v);
+        params.append(`attachments[${k}]`, value);
+    }
+    return params;
+}
