@@ -22,7 +22,9 @@ export type UserConstraints = z.infer<typeof UserConstraints>
 export const UserSearchOptions = z.object({
     queryKey: z.string().optional(),
     constraints: z.custom<UserConstraints>().optional(),
-    attachments: z.unknown().optional(),
+    attachments: z.object({
+        availability: z.boolean().optional(),
+    }).optional(),
     order: z.enum(["priority", "updated", "outdated", "newest", "oldest", "closed", "title", "relevance"]).optional(),
     before: z.number().optional(),
     after: z.number().optional(),

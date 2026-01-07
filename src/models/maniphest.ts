@@ -80,7 +80,11 @@ export type SearchTaskResult = z.infer<typeof SearchTaskResult>
 export const TaskSearchOptions = z.object({
     queryKey: z.string().optional(),
     constraints: z.custom<TaskConstraints>().optional(),
-    attachments: z.unknown().optional(),
+    attachments: z.object({
+        columns: z.boolean().optional(),
+        projects: z.boolean().optional(),
+        subscribers: z.boolean().optional(),
+    }).optional(),
     order: z.enum(["priority", "updated", "outdated", "newest", "oldest", "closed", "title", "relevance"]).optional(),
     before: z.number().optional(),
     after: z.number().optional(),

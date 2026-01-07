@@ -3,7 +3,7 @@ import { PhorgeError, CreateObjectResult } from "./models/phorge.js";
 import { SearchProjectResult, ProjectTransaction, ProjectSearchOptions } from "./models/project.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
 import { SearchUserResult, UserSearchOptions } from "./models/user.js";
-import { ConstraintObjectToParams, TransactionObjectToParams } from "./utils.js";
+import { AttachmentsObjectToParams, ConstraintObjectToParams, TransactionObjectToParams } from "./utils.js";
 
 // Import types only
 import type { SearchTaskResponse, TaskTransactions, CreateTaskResponse } from "./models/maniphest.js";
@@ -30,27 +30,33 @@ export class Client {
         return await resp.json();
     }
 
-    async searchProject(options: ProjectSearchOptions): Promise<SearchProjectResult[]> {
+    async searchProject(options?: ProjectSearchOptions): Promise<SearchProjectResult[]> {
         let params = new URLSearchParams()
         if (options !== undefined) {
             if (options.queryKey) {
                 params.append("queryKey", options.queryKey)
             }
+
             if (options.constraints !== undefined) {
                 params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
             }
-            if (options.attachments !== undefined) {
-                //TODO: Implement attachments
+
+            if (options.attachments !== undefined && options.attachments !== null) {
+                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
             }
+
             if (options.order !== undefined) {
                 params.append("order", options.order)
             }
+
             if (options.before !== undefined) {
                 params.append("before", options.before.toString())
             }
+
             if (options.after !== undefined) {
                 params.append("after", options.after.toString())
             }
+
             if (options.limit !== undefined) {
                 params.append("limit", options.limit.toString())
             }
@@ -85,21 +91,27 @@ export class Client {
             if (options.queryKey) {
                 params.append("queryKey", options.queryKey)
             }
+
             if (options.constraints !== undefined) {
                 params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
             }
+
             if (options.attachments !== undefined) {
-                //TODO: Implement attachments
+                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
             }
+
             if (options.order !== undefined) {
                 params.append("order", options.order)
             }
+
             if (options.before !== undefined) {
                 params.append("before", options.before.toString())
             }
+
             if (options.after !== undefined) {
                 params.append("after", options.after.toString())
             }
+
             if (options.limit !== undefined) {
                 params.append("limit", options.limit.toString())
             }
@@ -108,6 +120,7 @@ export class Client {
         params.append("api.token", this.token);
 
         const resp = await this.call<SearchTaskResponse>("maniphest.search", params);
+
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
@@ -139,7 +152,7 @@ export class Client {
                 params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
             }
             if (options.attachments) {
-                // TODO: Implement attachments
+                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
             }
             if (options.order) {
                 // TODO: Improve order type

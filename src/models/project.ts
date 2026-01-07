@@ -63,7 +63,11 @@ export type ProjectConstraints = z.infer<typeof ProjectConstraints>
 export const ProjectSearchOptions = z.object({
     queryKey: z.string().optional(),
     constraints: z.custom<ProjectConstraints>().optional(),
-    attachments: z.unknown().optional(),
+    attachments: z.object({
+        members: z.boolean().optional(),
+        watchers: z.boolean().optional(),
+        ancestors: z.boolean().optional(),
+    }).optional(),
     order: z.enum(["priority", "updated", "outdated", "newest", "oldest", "closed", "title", "relevance"]).optional(),
     before: z.number().optional(),
     after: z.number().optional(),
