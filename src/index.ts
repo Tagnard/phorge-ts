@@ -4,3 +4,4 @@ export type { ProjectConstraints, SearchProjectResult, SearchProjectResponse, Pr
 export type { SearchTransactionResponse, SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
 export type { UserConstraints, SearchUserResult, SearchUserResponse, UserSearchOptions } from "./models/user.js";
 export type { TaskSearchOptions, SearchTaskResult } from "./models/maniphest.js";
+export type * from "./models/phorge.js";
