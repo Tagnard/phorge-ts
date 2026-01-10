@@ -1,5 +1,5 @@
 import { TaskSearchOptions, SearchTaskResult } from "./models/maniphest.js";
-import { PhorgeError, CreateObjectResult } from "./models/phorge.js";
+import { PhorgeError, CreateObjectResult, type PHID } from "./models/phorge.js";
 import { SearchProjectResult, ProjectTransaction, ProjectSearchOptions } from "./models/project.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
 import { SearchUserResult, UserSearchOptions } from "./models/user.js";
@@ -129,7 +129,21 @@ export class Client {
         params.append("api.token", this.token);
 
         const resp = await this.call<CreateTaskResponse>("maniphest.edit", params);
-        console.log(JSON.stringify(resp, null, 4))
+
+        if (resp.error_code !== null) {
+            throw new PhorgeError(resp.error_code, resp.error_info);
+        } else {
+            return resp.result.object;
+        }
+    }
+
+    async updateTask(phid: PHID<"TASK">, transaction: TaskTransactions): Promise<CreateObjectResult> {
+        let params = TransactionObjectToParams(transaction)
+        params.append("objectIdentifier", phid);
+        params.append("api.token", this.token);
+
+        const resp = await this.call<CreateTaskResponse>("maniphest.edit", params);
+
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {

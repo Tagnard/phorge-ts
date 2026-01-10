@@ -3,15 +3,44 @@ import type { ApiResponse, PHID, Policy } from "./phorge.js";
 import { CreateObjectResult } from "./phorge.js";
 
 export const TaskTransaction = z.object({
+    parent: z.custom<PHID<"TASK">>().optional(),
+    column: z.custom<PHID<"COLN">>().optional(),
+    space: z.custom<PHID<"SPCE">>().optional(),
     title: z.string().optional(),
+    owner: z.custom<PHID<"USER">>().optional(),
+    status: z.string().optional(),
+    priority: z.string().optional(),
     description: z.string().optional(),
-    priority: z.enum(["unbreak", "triage", "high", "normal", "low", "wish"]).optional(),
-    ownerPHID: z.custom<PHID<"USER">>().optional(),
-    parents: z.custom<PHID<'TASK'>>().array().optional(),
-    subtasks: z.custom<PHID<'TASK'>>().array().optional(),
-    commits: z.custom<PHID<'CMIT'>>().array().optional(),
-    projects: z.custom<PHID<'PROJ'>>().array().optional(),
-    subscribers: z.custom<PHID<'USER'>>().array().optional(),
+    parents: z.object({
+        add: z.custom<PHID<'TASK'>>().array().optional(),
+        remove: z.custom<PHID<'TASK'>>().array().optional(),
+        set: z.custom<PHID<'TASK'>>().array().optional(),
+    }).optional(),
+    subtasks: z.object({
+        add: z.custom<PHID<'TASK'>>().array().optional(),
+        remove: z.custom<PHID<'TASK'>>().array().optional(),
+        set: z.custom<PHID<'TASK'>>().array().optional(),
+    }).optional(),
+    commits: z.object({
+        add: z.custom<PHID<'CMIT'>>().array().optional(),
+        remove: z.custom<PHID<'CMIT'>>().array().optional(),
+        set: z.custom<PHID<'CMIT'>>().array().optional(),
+    }).optional(),
+    view: z.string().optional(),
+    edit: z.string().optional(),
+    projects: z.object({
+        add: z.custom<PHID<'PROJ'>>().array().optional(),
+        remove: z.custom<PHID<'PROJ'>>().array().optional(),
+        set: z.custom<PHID<'PROJ'>>().array().optional(),
+    }).optional(),
+    subscribers: z.object({
+        add: z.custom<PHID<'USER'>>().array().optional(),
+        remove: z.custom<PHID<'USER'>>().array().optional(),
+        set: z.custom<PHID<'USER'>>().array().optional(),
+    }).optional(),
+    subtype: z.string().optional(),
+    comment: z.string().optional(),
+    mfa: z.string().optional(),
 });
 
 export type TaskTransactions = z.infer<typeof TaskTransaction>
@@ -24,7 +53,7 @@ export const TaskConstraints = z.object({
     statuses: z.custom<string>().array().optional(),
     priorities: z.custom<number>().array().optional(),
     subtypes: z.custom<string>().array().optional(),
-    columnPHIDs: z.unknown().optional(),
+    columnPHIDs: z.custom<"PCOL">().optional(),
     hasParents: z.boolean().optional(),
     hasSubtasks: z.boolean().optional(),
     parentIDs: z.custom<PHID<"TASK">>().array().optional(),
