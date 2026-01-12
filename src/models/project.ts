@@ -1,4 +1,4 @@
-import { type ApiResponse, CreateObjectResult, type PHID, type Policy } from "./phorge.js"
+import { Policy, type ApiResponse, type CreateObjectResult, type PHID } from "./phorge.js"
 import * as z from "zod"
 
 export const Icon = z.object({
@@ -11,7 +11,7 @@ export type Icon = z.infer<typeof Icon>
 
 export const Color = z.object({
     key: z.string(),
-    mame: z.string(),
+    name: z.string(),
 })
 
 export type Color = z.infer<typeof Color>
@@ -78,25 +78,40 @@ export type ProjectSearchOptions = z.infer<typeof ProjectSearchOptions>
 
 export const SearchProjectResult = z.object({
     id: z.number(),
-    type: z.custom<"PROJ">(),
+    type: z.literal("PROJ"),
     phid: z.custom<PHID<"PROJ">>(),
     fields: z.object({
         name: z.string(),
         slug: z.string(),
         subtype: z.string(),
-        milestone: z.unknown(),
+        milestone: z.number().nullable(),
         depth: z.number(),
-        parent: z.custom<PHID<"PROJ">>(),
+        parent: z.custom<PHID<"PROJ">>().nullable(),
         icon: z.custom<Icon>(),
         color: z.custom<Color>(),
         status: z.enum(["active", "archived", "all"]),
-        spacePHID: z.custom<PHID<"SPCE">>(),
+        spacePHID: z.custom<PHID<"SPCE">>().nullable(),
         dateCreated: z.number(),
         dateModified: z.number(),
-        policy: z.custom<Policy>(),
-        description: z.string()
+        policy: Policy,
+        description: z.string().nullable(),
+    }),
+    attachments: z.object({
+        members: z.object({
+            members: z.object({
+                phid: z.custom<PHID<"USER">>()
+            }).array()
+        }).optional(),
+        watchers: z.object({
+            watchers: z.object({
+                phid: z.custom<PHID<"USER">>()
+            }).array()
+        }).optional(),
+        ancestors: z.object({
+            ancestors: z.custom<PHID<"PROJ">>().array()
+        }).optional()
     })
-}) 
+})
 
 export type SearchProjectResult = z.infer<typeof SearchProjectResult>
 

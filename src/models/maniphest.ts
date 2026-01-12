@@ -1,5 +1,5 @@
 import * as z from "zod"
-import type { ApiResponse, PHID, Policy } from "./phorge.js";
+import { Policy, type ApiResponse, type PHID } from "./phorge.js";
 import { CreateObjectResult } from "./phorge.js";
 
 export const TaskTransaction = z.object({
@@ -75,33 +75,46 @@ export type TaskConstraints = z.infer<typeof TaskConstraints>
 
 export const SearchTaskResult = z.object({
     id: z.number(),
+    type: z.literal("TASK"),
     phid: z.custom<PHID<"TASK">>(),
     fields: z.object({
         name: z.string(),
         description: z.object({ raw: z.string() }),
-        authorPHID: z.custom<PHID<"USER">>,
-        ownerPHID: z.custom<PHID<"USER">>,
+        authorPHID: z.custom<PHID<"USER">>(),
+        ownerPHID: z.custom<PHID<"USER">>().nullable(),
         status: z.object({
             value: z.string(),
             name: z.string(),
             color: z.string().nullable()
         }),
         priority: z.object({
-            value: z.string(),
+            value: z.number(),
             name: z.string(),
             color: z.string().nullable()
         }),
-        points: z.number(),
+        points: z.number().nullable(),
         subtype: z.string(),
-        closePHID: z.custom<PHID<"USER">>,
-        dateClosed: z.number(),
-        groupByProjectPHID: z.unknown(), // TODO: Needs to be implemented
-        spacePHID: z.custom<PHID<"SPCE">>(), // TODO: Needs to be implemented
+        closerPHID: z.custom<PHID<"USER">>().nullable(),
+        dateClosed: z.number().nullable(),
+        groupByProjectPHID: z.unknown(),
+        spacePHID: z.custom<PHID<"SPCE">>().nullable(),
         dateCreated: z.number(),
         dateModified: z.number(),
-        policy: z.custom<Policy>(),
+        policy: Policy,
     }),
-    attachments: z.unknown() // TODO: Needs to be implemented
+    attachments: z.object({
+        columns: z.object({
+            boards: z.unknown().array()
+        }),
+        projects: z.object({
+            projectPHIDs: z.custom<PHID<"PROJ">>().array()
+        }),
+        subscribers: z.object({
+            subscriberPHIDs: z.custom<PHID<"USER">>().array(),
+            subscriberCount: z.number(),
+            viewerIsSubscribed: z.boolean()
+        })
+    })
 })
 
 export type SearchTaskResult = z.infer<typeof SearchTaskResult>

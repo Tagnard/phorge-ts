@@ -12,11 +12,14 @@ export type ProjectAPI = "project.search"
 
 export type PhorgeApis = ManiphestAPI | ProjectAPI
 
-export type Policy = {
-    view: string
-    edit: string
-    join: string
-}
+export const Policy = z.object({
+    view: z.string(),
+    edit: z.string(),
+    join: z.string().optional(),
+    interact: z.string().optional(),
+})
+
+export type Policy = z.infer<typeof Policy>
 
 export type Cursor = {
     limit: number;

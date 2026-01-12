@@ -1,5 +1,5 @@
 import * as z from "zod"
-import type { ApiResponse, CreateObjectResult, PHID } from "./phorge.js"
+import { Policy, type ApiResponse, type CreateObjectResult, type PHID } from "./phorge.js"
 
 export const UserConstraints = z.object({
     ids: z.number().array().nonempty().optional(),
@@ -43,10 +43,7 @@ export const SearchUserResult = z.object({
         roles: z.string().array(),
         dateCreated: z.number(),
         dateModified: z.number(),
-        policy: z.object({
-            view: z.string(),
-            edit: z.string()
-        })
+        policy: Policy
     }),
     attachments: z.unknown()
 }).array()
