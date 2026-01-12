@@ -28,6 +28,7 @@ describe("Client", () => {
                         name: "Test Project",
                         description: "A test project",
                         slug: "test-project",
+                        subtype: "default",
                         milestone: 1,
                         depth: 1,
                         parent: null,

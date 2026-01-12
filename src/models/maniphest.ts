@@ -75,6 +75,7 @@ export type TaskConstraints = z.infer<typeof TaskConstraints>
 
 export const SearchTaskResult = z.object({
     id: z.number(),
+    type: z.literal("TASK"),
     phid: z.custom<PHID<"TASK">>(),
     fields: z.object({
         name: z.string(),
