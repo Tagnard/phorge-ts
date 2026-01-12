@@ -22,6 +22,7 @@ describe("Client", () => {
             const mockResponse: SearchProjectResult[] = [
                 {
                     id: 1,
+                    type: "PROJ",
                     phid: "PHID-PROJ-123",
                     fields: {
                         name: "Test Project",
@@ -32,7 +33,8 @@ describe("Client", () => {
                         parent: null,
                         color: { key: "blue", name: "Blue" },
                         icon: { key: "check", name: "Check" },
-                        image: null,
+                        status: "active",
+                        spacePHID: null,
                         dateCreated: 1629878400,
                         dateModified: 1629878400,
                         policy: { view: "public", edit: "users" },
@@ -53,6 +55,73 @@ describe("Client", () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_NOT_FOUND", error_info: "Project not found" }));
 
             await expect(client.searchProject()).rejects.toThrow(PhorgeError);
+        });
+
+        test("should return a list of projects with attachments on success", async () => {
+            const mockResponse: SearchProjectResult[] = [
+                {
+                    id: 1,
+                    type: "PROJ",
+                    phid: "PHID-PROJ-vg4ynenht5xkrgdwaoyj",
+                    fields: {
+                        name: "One",
+                        slug: "one",
+                        subtype: "default",
+                        milestone: null,
+                        depth: 0,
+                        parent: null,
+                        icon: {
+                            key: "project",
+                            name: "Project",
+                            icon: "fa-briefcase",
+                        },
+                        color: {
+                            key: "blue",
+                            name: "Blue",
+                        },
+                        status: "active",
+                        spacePHID: null,
+                        dateCreated: 1767701677,
+                        dateModified: 1767797148,
+                        policy: {
+                            view: "users",
+                            edit: "users",
+                        },
+                        description: null,
+                    },
+                    attachments: {
+                        members: {
+                            members: [
+                                {
+                                    phid: "PHID-USER-pem4jdwjvmsensfmkfxt",
+                                },
+                            ],
+                        },
+                        watchers: {
+                            watchers: [
+                                {
+                                    phid: "PHID-USER-pem4jdwjvmsensfmkfxt",
+                                },
+                            ],
+                        },
+                        ancestors: {
+                            ancestors: [],
+                        },
+                    },
+                },
+            ];
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
+
+            const projects = await client.searchProject({
+                attachments: {
+                    members: true,
+                    watchers: true,
+                    ancestors: true,
+                },
+            });
+
+            expect(projects).toEqual(mockResponse);
         });
     });
 
