@@ -38,6 +38,7 @@ describe("Client", () => {
                         dateCreated: 1629878400,
                         dateModified: 1629878400,
                         policy: { view: "public", edit: "users", join: "users" },
+                        subtype: ""
                     },
                     attachments: {},
                 },
