@@ -80,7 +80,7 @@ export const SearchTaskResult = z.object({
     fields: z.object({
         name: z.string(),
         description: z.object({ raw: z.string() }),
-        authorPHID: z.custom<PHID<"USER">>,
+        authorPHID: z.custom<PHID<"USER">>(),
         ownerPHID: z.custom<PHID<"USER">>().nullable(),
         status: z.object({
             value: z.string(),
