@@ -133,7 +133,7 @@ describe("Client", () => {
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
 
-            const newProject = await client.createProject({ name: "New Project" });
+            const newProject = await client.createProject([{ type: "name", value: "New Project" }]);
 
             expect(newProject).toEqual(mockResponse);
         });
@@ -141,7 +141,25 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
-            await expect(client.createProject({ name: "New Project" })).rejects.toThrow(PhorgeError);
+            await expect(client.createProject([{ type: "name", value: "New Project" }])).rejects.toThrow(PhorgeError);
+        });
+    });
+
+    describe("editProject", () => {
+        test("should return an updated project object on success", async () => {
+            const mockResponse = { id: "1", phid: "PHID-PROJ-123" };
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
+
+            const updatedProject = await client.editProject("PHID-PROJ-123", [{ type: "name", value: "Updated Project" }]);
+
+            expect(updatedProject).toEqual(mockResponse);
+        });
+
+        test("should throw a PhorgeError on failure", async () => {
+            fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
+
+            await expect(client.editProject("PHID-PROJ-123", [{ type: "name", value: "Updated Project" }])).rejects.toThrow(PhorgeError);
         });
     });
 

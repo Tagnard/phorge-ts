@@ -17,6 +17,24 @@ export function ConstraintObjectToParams(obj: Record<string, any>, prefix = ""):
     return params;
 }
 
+export function EditTransactionObjectToParams(transactions: Record<string, any>[]): URLSearchParams {
+    const params = new URLSearchParams();
+    transactions.forEach((transaction, index) => {
+        const typeKey = `transactions[${index}][type]`;
+        const valueKey = `transactions[${index}][value]`;
+        params.append(typeKey, transaction.type);
+        if (Array.isArray(transaction.value)) {
+            transaction.value.forEach((item: string, j: number) => {
+                const itemKey = `${valueKey}[${j}]`;
+                params.append(itemKey, item);
+            });
+        } else {
+            params.append(valueKey, transaction.value);
+        }
+    });
+    return params;
+}
+
 export function TransactionObjectToParams(obj: Record<string, any>, prefix = ""): URLSearchParams {
     const params = new URLSearchParams();
     let index = 0;
