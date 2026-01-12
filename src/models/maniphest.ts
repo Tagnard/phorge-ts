@@ -91,10 +91,10 @@ export const SearchTaskResult = z.object({
             name: z.string(),
             color: z.string().nullable()
         }),
-        points: z.number(),
+        points: z.number().nullable(),
         subtype: z.string(),
-        closePHID: z.custom<PHID<"USER">>,
-        dateClosed: z.number(),
+        closePHID: z.custom<PHID<"USER">>().nullable(),
+        dateClosed: z.number().nullable(),
         groupByProjectPHID: z.unknown(), // TODO: Needs to be implemented
         spacePHID: z.custom<PHID<"SPCE">>(), // TODO: Needs to be implemented
         dateCreated: z.number(),

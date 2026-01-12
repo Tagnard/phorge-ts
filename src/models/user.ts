@@ -45,7 +45,8 @@ export const SearchUserResult = z.object({
         dateModified: z.number(),
         policy: z.object({
             view: z.string(),
-            edit: z.string()
+            edit: z.string(),
+            join: z.string()
         })
     }),
     attachments: z.unknown()
