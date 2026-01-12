@@ -84,7 +84,7 @@ export const SearchProjectResult = z.object({
         name: z.string(),
         slug: z.string(),
         subtype: z.string(),
-        milestone: z.unknown().nullable(),
+        milestone: z.number().nullable(),
         depth: z.number(),
         parent: z.custom<PHID<"PROJ">>().nullable(),
         icon: z.custom<Icon>(),
