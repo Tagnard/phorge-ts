@@ -38,7 +38,6 @@ describe("Client", () => {
                         dateCreated: 1629878400,
                         dateModified: 1629878400,
                         policy: { view: "public", edit: "users", join: "users" },
-                        subtype: ""
                     },
                     attachments: {},
                 },
@@ -149,27 +148,56 @@ describe("Client", () => {
         test("should return a list of tasks on success", async () => {
             const mockResponse: SearchTaskResult[] = [
                 {
-                    id: 1,
-                    phid: "PHID-TASK-123",
+                    id: 11,
+                    type: "TASK",
+                    phid: "PHID-TASK-34hrdlpijuixi2ghj52r",
                     fields: {
-                        name: "Test Task",
-                        description: { raw: "A test task" },
-                        authorPHID: "PHID-USER-1",
-                        ownerPHID: "PHID-USER-2",
-                        status: { value: "open", name: "Open", color: "blue" },
-                        priority: { value: "high", name: "High", color: "red" },
-                        points: 5,
+                        name: "Title",
+                        description: {
+                            raw: "Description"
+                        },
+                        authorPHID: "PHID-USER-rnkdeb65flsegm4e3y62",
+                        ownerPHID: null,
+                        status: {
+                            value: "open",
+                            name: "Open",
+                            color: null
+                        },
+                        priority: {
+                            value: 90,
+                            name: "Needs Triage",
+                            color: "violet"
+                        },
+                        points: null,
                         subtype: "default",
-                        closePHID: null,
+                        closerPHID: null,
                         dateClosed: null,
                         groupByProjectPHID: null,
-                        spacePHID: "PHID-SPCE-1",
-                        dateCreated: 1629878400,
-                        dateModified: 1629878400,
-                        policy: { view: "public", edit: "users", join: "users" },
+                        spacePHID: null,
+                        dateCreated: 1768121863,
+                        dateModified: 1768121863,
+                        policy: {
+                            view: "users",
+                            interact: "users",
+                            edit: "users"
+                        }
                     },
-                    attachments: {},
-                },
+                    attachments: {
+                        columns: {
+                            boards: []
+                        },
+                        projects: {
+                            projectPHIDs: []
+                        },
+                        subscribers: {
+                            subscriberPHIDs: [
+                                "PHID-USER-rnkdeb65flsegm4e3y62"
+                            ],
+                            subscriberCount: 1,
+                            viewerIsSubscribed: true
+                        }
+                    }
+                }
             ];
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
@@ -224,20 +252,30 @@ describe("Client", () => {
 
     describe("searchUser", () => {
         test("should return a list of users on success", async () => {
-            const mockResponse = [{
-                id: 1,
-                type: "USER",
-                phid: "PHID-USER-123",
-                fields: {
-                    username: "testuser",
-                    realName: "Test User",
-                    roles: [],
-                    dateCreated: 1629878400,
-                    dateModified: 1629878400,
-                    policy: { view: "public", edit: "users", join: "users" },
-                },
-                attachments: {},
-            }];
+            const mockResponse = [
+                {
+                    "id": 2,
+                    "type": "USER",
+                    "phid": "PHID-USER-rnkdeb65flsegm4e3y62",
+                    "fields": {
+                        "username": "bot",
+                        "realName": "Bottington",
+                        "roles": [
+                            "bot",
+                            "verified",
+                            "approved",
+                            "activated"
+                        ],
+                        "dateCreated": 1767700151,
+                        "dateModified": 1767700151,
+                        "policy": {
+                            "view": "public",
+                            "edit": "admin"
+                        }
+                    },
+                    "attachments": {}
+                }
+            ];
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
 

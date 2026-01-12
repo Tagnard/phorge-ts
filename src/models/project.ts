@@ -1,4 +1,4 @@
-import { type ApiResponse, CreateObjectResult, type PHID, type Policy } from "./phorge.js"
+import { Policy, type ApiResponse, type CreateObjectResult, type PHID } from "./phorge.js"
 import * as z from "zod"
 
 export const Icon = z.object({
@@ -93,7 +93,7 @@ export const SearchProjectResult = z.object({
         spacePHID: z.custom<PHID<"SPCE">>().nullable(),
         dateCreated: z.number(),
         dateModified: z.number(),
-        policy: z.custom<Policy>(),
+        policy: Policy,
         description: z.string().nullable(),
     }),
     attachments: z.object({
