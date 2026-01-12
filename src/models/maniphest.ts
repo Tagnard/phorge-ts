@@ -96,8 +96,8 @@ export const SearchTaskResult = z.object({
         subtype: z.string(),
         closerPHID: z.custom<PHID<"USER">>().nullable(),
         dateClosed: z.number().nullable(),
-        groupByProjectPHID: z.unknown(), // TODO: Needs to be implemented
-        spacePHID: z.custom<PHID<"SPCE">>().nullable(), // TODO: Needs to be implemented
+        groupByProjectPHID: z.unknown(),
+        spacePHID: z.custom<PHID<"SPCE">>().nullable(),
         dateCreated: z.number(),
         dateModified: z.number(),
         policy: Policy,
