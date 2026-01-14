@@ -239,7 +239,7 @@ describe("Client", () => {
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
 
-            const newTask = await client.createTask({ title: "New Task" });
+            const newTask = await client.createTask([{ type: "title", value: "New Task" }]);
 
             expect(newTask).toEqual(mockResponse);
         });
@@ -247,7 +247,7 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
-            await expect(client.createTask({ title: "New Task" })).rejects.toThrow(PhorgeError);
+            await expect(client.createTask([{ type: "title", value: "New Task" }])).rejects.toThrow(PhorgeError);
         });
     });
 
@@ -257,7 +257,7 @@ describe("Client", () => {
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
 
-            const updatedTask = await client.updateTask("PHID-TASK-123", { title: "Updated Task" });
+            const updatedTask = await client.updateTask("PHID-TASK-123", [{ type: "title", value: "Updated Task" }]);
 
             expect(updatedTask).toEqual(mockResponse);
         });
@@ -265,7 +265,7 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
-            await expect(client.updateTask("PHID-TASK-122", { title: "Updated Task" })).rejects.toThrow(PhorgeError);
+            await expect(client.updateTask("PHID-TASK-122", [{ type: "title", value: "Updated Task" }])).rejects.toThrow(PhorgeError);
         });
     });
 

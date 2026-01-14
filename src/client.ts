@@ -4,10 +4,10 @@ import { SearchProjectResult, ProjectSearchOptions } from "./models/project.js";
 import { ProjectEditTransaction } from "./models/project_edit.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
 import { SearchUserResult, UserSearchOptions } from "./models/user.js";
-import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams, TransactionObjectToParams } from "./utils.js";
+import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams } from "./utils.js";
 
 // Import types only
-import type { SearchTaskResponse, TaskTransactions, CreateTaskResponse } from "./models/maniphest.js";
+import type { SearchTaskResponse, TaskTransaction, CreateTaskResponse } from "./models/maniphest.js";
 import type { SearchProjectResponse, CreateProjectResponse } from "./models/project.js"
 import type { SearchTransactionResponse } from "./models/transaction.js";
 import type { SearchUserResponse } from "./models/user.js";
@@ -137,8 +137,8 @@ export class Client {
         }
     }
 
-    async createTask(transaction: TaskTransactions): Promise<CreateObjectResult> {
-        let params = TransactionObjectToParams(transaction)
+    async createTask(transactions: TaskTransaction[]): Promise<CreateObjectResult> {
+        let params = EditTransactionObjectToParams(transactions)
         params.append("api.token", this.token);
 
         const resp = await this.call<CreateTaskResponse>("maniphest.edit", params);
@@ -150,8 +150,8 @@ export class Client {
         }
     }
 
-    async updateTask(phid: PHID<"TASK">, transaction: TaskTransactions): Promise<CreateObjectResult> {
-        let params = TransactionObjectToParams(transaction)
+    async updateTask(phid: PHID<"TASK">, transactions: TaskTransaction[]): Promise<CreateObjectResult> {
+        let params = EditTransactionObjectToParams(transactions)
         params.append("objectIdentifier", phid);
         params.append("api.token", this.token);
 
