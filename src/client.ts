@@ -1,7 +1,6 @@
 import { TaskSearchOptions, SearchTaskResult } from "./models/maniphest.js";
 import { PhorgeError, CreateObjectResult, type PHID } from "./models/phorge.js";
-import { SearchProjectResult, ProjectSearchOptions } from "./models/project.js";
-import { ProjectEditTransaction } from "./models/project_edit.js";
+import { SearchProjectResult, ProjectSearchOptions, ProjectEditTransaction } from "./models/project.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
 import { SearchUserResult, UserSearchOptions } from "./models/user.js";
 import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams } from "./utils.js";
