@@ -16,28 +16,6 @@ export const Color = z.object({
 
 export type Color = z.infer<typeof Color>
 
-export const ProjectTransaction = z.object({
-    parent: z.custom<PHID<"PROJ">>().optional(),
-    milestone: z.custom<PHID<"PROJ">>().optional(),
-    space: z.unknown().optional(),
-    name: z.string().optional(),
-    description: z.string().optional(),
-    icon: z.string().optional(),
-    color: z.string().optional(),
-    slugs: z.string().array().nonempty().optional(),
-    members: z.object({
-        add: z.custom<PHID<"USER">>().array().nonempty().optional(),
-        remove: z.custom<PHID<"USER">>().array().nonempty().optional(),
-        set: z.custom<PHID<"USER">>().array().nonempty().optional()
-    }).optional(),
-    view: z.custom<PHID<"PLCY">>().or(z.enum(["obj.project.members", "users", "admin", "no-one"])).optional(), // TODO, Check Policy ID, and policy constant
-    edit: z.custom<PHID<"PLCY">>().or(z.enum(["obj.project.members", "users", "admin", "no-one"])).optional(), // TODO, Check Policy ID, and policy constant
-    join: z.custom<PHID<"PLCY">>().or(z.enum(["obj.project.members", "users", "admin", "no-one"])).optional(), // TODO, Check Policy ID, and policy constant
-    subtype: z.string().optional(),
-    mfa: z.boolean().optional()
-})
-
-export type ProjectTransaction = z.infer<typeof ProjectTransaction>
 
 export const ProjectConstraints = z.object({
     ids: z.number().array().nonempty().optional(),

@@ -1,9 +1,10 @@
 import { TaskSearchOptions, SearchTaskResult } from "./models/maniphest.js";
 import { PhorgeError, CreateObjectResult, type PHID } from "./models/phorge.js";
-import { SearchProjectResult, ProjectTransaction, ProjectSearchOptions } from "./models/project.js";
+import { SearchProjectResult, ProjectSearchOptions } from "./models/project.js";
+import { ProjectEditTransaction } from "./models/project_edit.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
 import { SearchUserResult, UserSearchOptions } from "./models/user.js";
-import { AttachmentsObjectToParams, ConstraintObjectToParams, TransactionObjectToParams } from "./utils.js";
+import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams, TransactionObjectToParams } from "./utils.js";
 
 // Import types only
 import type { SearchTaskResponse, TaskTransactions, CreateTaskResponse } from "./models/maniphest.js";
@@ -68,12 +69,24 @@ export class Client {
         }
     }
 
-    async createProject(transactions: ProjectTransaction): Promise<CreateObjectResult> {
-        let params = TransactionObjectToParams(transactions)
+    async editProject(phid: PHID<"PROJ">, transactions: ProjectEditTransaction[]): Promise<CreateObjectResult> {
+        let params = EditTransactionObjectToParams(transactions);
+        params.append("objectIdentifier", phid);
         params.append("api.token", this.token);
 
         const resp = await this.call<CreateProjectResponse>("project.edit", params);
-        console.log(JSON.stringify(resp, null, 4))
+        if (resp.error_code !== null) {
+            throw new PhorgeError(resp.error_code, resp.error_info);
+        } else {
+            return resp.result.object;
+        }
+    }
+
+    async createProject(transactions: ProjectEditTransaction[]): Promise<CreateObjectResult> {
+        let params = EditTransactionObjectToParams(transactions)
+        params.append("api.token", this.token);
+
+        const resp = await this.call<CreateProjectResponse>("project.edit", params);
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
