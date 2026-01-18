@@ -107,22 +107,12 @@ describe("Client E2E", () => {
         expect(statuses[0]).toHaveProperty("value");
     });
 
-    test("cleanup: archive project and close task", async () => {
-        if (taskPHID) {
-            await client.updateTask(taskPHID, [
-                { type: "status", value: "closed" }
-            ]);
-        }
-        if (projectPHID) {
-            await client.editProject(projectPHID, [
-                { type: "status", value: "archived" }
-            ]);
-        }
+    test("cleanup: close task", async () => {
+        if (!taskPHID) return;
 
-        const projects = await client.searchProject({
-            constraints: { phids: [projectPHID], status: "archived" }
-        });
-        expect(projects[0]!.fields.status).toBe("archived");
+        await client.updateTask(taskPHID, [
+            { type: "status", value: "closed" }
+        ]);
 
         const tasks = await client.searchTask({
             constraints: { phids: [taskPHID] }

@@ -178,11 +178,6 @@ export const ProjectEditMfaTransaction = z.object({
     value: z.boolean(),
 });
 
-export const ProjectEditStatusTransaction = z.object({
-    type: z.literal("status"),
-    value: z.enum(["active", "archived"]),
-});
-
 export const ProjectEditTransaction = z.union([
     ProjectEditParentTransaction,
     ProjectEditMilestoneTransaction,
@@ -200,7 +195,6 @@ export const ProjectEditTransaction = z.union([
     ProjectEditJoinTransaction,
     ProjectEditSubtypeTransaction,
     ProjectEditMfaTransaction,
-    ProjectEditStatusTransaction,
 ]);
 
 export type ProjectEditTransaction = z.infer<typeof ProjectEditTransaction>;
