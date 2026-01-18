@@ -1,4 +1,4 @@
-import { TaskSearchOptions, SearchTaskResult } from "./models/maniphest.js";
+import { TaskSearchOptions, SearchTaskResult, ManiphestStatus, SearchManiphestStatusResult } from "./models/maniphest.js";
 import { PhorgeError, CreateObjectResult, type PHID } from "./models/phorge.js";
 import { SearchProjectResult, ProjectSearchOptions, ProjectEditTransaction } from "./models/project.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
@@ -6,7 +6,7 @@ import { SearchUserResult, UserSearchOptions } from "./models/user.js";
 import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams } from "./utils.js";
 
 // Import types only
-import type { SearchTaskResponse, TaskTransaction, CreateTaskResponse } from "./models/maniphest.js";
+import type { SearchTaskResponse, TaskTransaction, CreateTaskResponse, SearchManiphestStatusResponse } from "./models/maniphest.js";
 import type { SearchProjectResponse, CreateProjectResponse } from "./models/project.js"
 import type { SearchTransactionResponse } from "./models/transaction.js";
 import type { SearchUserResponse } from "./models/user.js";
@@ -228,8 +228,20 @@ export class Client {
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
-            console.log(resp.result.data)
             return SearchTransactionResult.parse(resp.result.data);
+        }
+    }
+
+    async searchManiphestStatus(): Promise<SearchManiphestStatusResult> {
+        let params = new URLSearchParams();
+        params.append("api.token", this.token);
+
+        const resp = await this.call<SearchManiphestStatusResponse>("maniphest.status.search", params);
+
+        if (resp.error_code !== null) {
+            throw new PhorgeError(resp.error_code, resp.error_info);
+        } else {
+            return SearchManiphestStatusResult.parse(resp.result.data);
         }
     }
 }
