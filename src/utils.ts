@@ -1,5 +1,4 @@
-export function ConstraintObjectToParams(obj: Record<string, any>, prefix = ""): URLSearchParams {
-    const params = new URLSearchParams();
+export function ConstraintObjectToParams(obj: Record<string, any>, params: URLSearchParams, prefix = ""): void {
     for (const [k, v] of Object.entries(obj)) {
         console.log(k, v)
         if (Array.isArray(v)) {
@@ -14,11 +13,9 @@ export function ConstraintObjectToParams(obj: Record<string, any>, prefix = ""):
             params.append(`constraints[${k}]`, value);
         }
     }
-    return params;
 }
 
-export function EditTransactionObjectToParams(transactions: Record<string, any>[]): URLSearchParams {
-    const params = new URLSearchParams();
+export function EditTransactionObjectToParams(transactions: Record<string, any>[], params: URLSearchParams): void {
     transactions.forEach((transaction, index) => {
         const typeKey = `transactions[${index}][type]`;
         const valueKey = `transactions[${index}][value]`;
@@ -32,15 +29,12 @@ export function EditTransactionObjectToParams(transactions: Record<string, any>[
             params.append(valueKey, transaction.value);
         }
     });
-    return params;
 }
 
 
-export function AttachmentsObjectToParams(obj: Record<string, any>): URLSearchParams {
-    const params = new URLSearchParams();
+export function AttachmentsObjectToParams(obj: Record<string, any>, params: URLSearchParams): void {
     for (const [k, v] of Object.entries(obj)) {
         const value = typeof v === "string" ? v : JSON.stringify(v);
         params.append(`attachments[${k}]`, value);
     }
-    return params;
 }

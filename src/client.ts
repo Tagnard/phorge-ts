@@ -34,11 +34,11 @@ export class Client {
             }
 
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                ConstraintObjectToParams(options.constraints, params)
             }
 
             if (options.attachments !== undefined && options.attachments !== null) {
-                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
+                AttachmentsObjectToParams(options.attachments, params)
             }
 
             if (options.order !== undefined) {
@@ -69,7 +69,8 @@ export class Client {
     }
 
     async editProject(phid: PHID<"PROJ">, transactions: ProjectEditTransaction[]): Promise<CreateObjectResult> {
-        let params = EditTransactionObjectToParams(transactions);
+        let params = new URLSearchParams()
+        EditTransactionObjectToParams(transactions, params);
         params.append("objectIdentifier", phid);
         params.append("api.token", this.token);
 
@@ -82,7 +83,8 @@ export class Client {
     }
 
     async createProject(transactions: ProjectEditTransaction[]): Promise<CreateObjectResult> {
-        let params = EditTransactionObjectToParams(transactions)
+        let params = new URLSearchParams()
+        EditTransactionObjectToParams(transactions, params)
         params.append("api.token", this.token);
 
         const resp = await this.call<CreateProjectResponse>("project.edit", params);
@@ -101,11 +103,11 @@ export class Client {
             }
 
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                ConstraintObjectToParams(options.constraints, params)
             }
 
             if (options.attachments !== undefined) {
-                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
+                AttachmentsObjectToParams(options.attachments, params)
             }
 
             if (options.order !== undefined) {
@@ -137,7 +139,8 @@ export class Client {
     }
 
     async createTask(transactions: TaskTransaction[]): Promise<CreateObjectResult> {
-        let params = EditTransactionObjectToParams(transactions)
+        let params = new URLSearchParams()
+        EditTransactionObjectToParams(transactions, params)
         params.append("api.token", this.token);
 
         const resp = await this.call<CreateTaskResponse>("maniphest.edit", params);
@@ -150,7 +153,8 @@ export class Client {
     }
 
     async updateTask(phid: PHID<"TASK">, transactions: TaskTransaction[]): Promise<CreateObjectResult> {
-        let params = EditTransactionObjectToParams(transactions)
+        let params = new URLSearchParams()
+        EditTransactionObjectToParams(transactions, params)
         params.append("objectIdentifier", phid);
         params.append("api.token", this.token);
 
@@ -171,10 +175,10 @@ export class Client {
                 params.append("queryKey", options.queryKey);
             }
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                ConstraintObjectToParams(options.constraints, params)
             }
             if (options.attachments) {
-                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
+                AttachmentsObjectToParams(options.attachments, params)
             }
             if (options.order) {
                 // TODO: Implement order type
@@ -211,7 +215,7 @@ export class Client {
                 params.append("objectType", options.objectType);
             }
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                ConstraintObjectToParams(options.constraints, params)
             }
             if (options.before) {
                 params.append("before", options.before.toString());
