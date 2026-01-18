@@ -1,4 +1,4 @@
-import { TaskSearchOptions, SearchTaskResult, ManiphestStatus, SearchManiphestStatusResult } from "./models/maniphest.js";
+import { TaskSearchOptions, SearchTaskResult, ManiphestStatus, SearchManiphestStatusResult, ManiphestPriority } from "./models/maniphest.js";
 import { PhorgeError, CreateObjectResult, type PHID } from "./models/phorge.js";
 import { SearchProjectResult, ProjectSearchOptions, ProjectEditTransaction } from "./models/project.js";
 import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
@@ -6,7 +6,7 @@ import { SearchUserResult, UserSearchOptions } from "./models/user.js";
 import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams } from "./utils.js";
 
 // Import types only
-import type { SearchTaskResponse, TaskTransaction, CreateTaskResponse, SearchManiphestStatusResponse } from "./models/maniphest.js";
+import type { SearchTaskResponse, TaskTransaction, CreateTaskResponse, SearchManiphestStatusResponse, SearchManiphestPriorityResponse } from "./models/maniphest.js";
 import type { SearchProjectResponse, CreateProjectResponse } from "./models/project.js"
 import type { SearchTransactionResponse } from "./models/transaction.js";
 import type { SearchUserResponse } from "./models/user.js";
@@ -34,11 +34,15 @@ export class Client {
             }
 
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                for (const [key, value] of ConstraintObjectToParams(options.constraints)) {
+                    params.append(key, value)
+                }
             }
 
             if (options.attachments !== undefined && options.attachments !== null) {
-                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
+                for (const [key, value] of AttachmentsObjectToParams(options.attachments)) {
+                    params.append(key, value)
+                }
             }
 
             if (options.order !== undefined) {
@@ -93,6 +97,19 @@ export class Client {
         }
     }
 
+    async searchManiphestPriority(): Promise<ManiphestPriority[]> {
+        let params = new URLSearchParams();
+        params.append("api.token", this.token);
+
+        const resp = await this.call<SearchManiphestPriorityResponse>("maniphest.priority.search", params);
+
+        if (resp.error_code !== null) {
+            throw new PhorgeError(resp.error_code, resp.error_info);
+        } else {
+            return ManiphestPriority.array().parse(resp.result.data);
+        }
+    }
+
     async searchTask(options?: TaskSearchOptions): Promise<SearchTaskResult[]> {
         let params = new URLSearchParams()
         if (options !== undefined) {
@@ -101,11 +118,15 @@ export class Client {
             }
 
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                for (const [key, value] of ConstraintObjectToParams(options.constraints)) {
+                    params.append(key, value)
+                }
             }
 
             if (options.attachments !== undefined) {
-                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
+                for (const [key, value] of AttachmentsObjectToParams(options.attachments)) {
+                    params.append(key, value)
+                }
             }
 
             if (options.order !== undefined) {
@@ -171,10 +192,14 @@ export class Client {
                 params.append("queryKey", options.queryKey);
             }
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                for (const [key, value] of ConstraintObjectToParams(options.constraints)) {
+                    params.append(key, value)
+                }
             }
             if (options.attachments) {
-                params = new URLSearchParams([...params, ...AttachmentsObjectToParams(options.attachments)])
+                for (const [key, value] of AttachmentsObjectToParams(options.attachments)) {
+                    params.append(key, value)
+                }
             }
             if (options.order) {
                 // TODO: Implement order type
@@ -211,7 +236,9 @@ export class Client {
                 params.append("objectType", options.objectType);
             }
             if (options.constraints !== undefined) {
-                params = new URLSearchParams([...params, ...ConstraintObjectToParams(options.constraints)])
+                for (const [key, value] of ConstraintObjectToParams(options.constraints)) {
+                    params.append(key, value)
+                }
             }
             if (options.before) {
                 params.append("before", options.before.toString());

@@ -265,8 +265,15 @@ export const TaskSearchOptions = z.object({
 
 export type TaskSearchOptions = z.infer<typeof TaskSearchOptions>
 
-export type CreateTaskResponse = ApiResponse<{ object: CreateObjectResult }>
-export type SearchTaskResponse = ApiResponse<{ data: SearchTaskResult[] }>
+export const ManiphestPriority = z.object({
+    name: z.string(),
+    keywords: z.array(z.string()),
+    short: z.string(),
+    color: z.string(),
+    value: z.number(),
+});
+
+export type ManiphestPriority = z.infer<typeof ManiphestPriority>;
 
 export const ManiphestStatus = z.object({
     name: z.string(),
@@ -281,4 +288,7 @@ export const SearchManiphestStatusResult = z.array(ManiphestStatus)
 
 export type SearchManiphestStatusResult = z.infer<typeof SearchManiphestStatusResult>
 
+export type CreateTaskResponse = ApiResponse<{ object: CreateObjectResult }>
+export type SearchTaskResponse = ApiResponse<{ data: SearchTaskResult[] }>
+export type SearchManiphestPriorityResponse = ApiResponse<{ data: ManiphestPriority[] }>
 export type SearchManiphestStatusResponse = ApiResponse<{ data: SearchManiphestStatusResult }>
