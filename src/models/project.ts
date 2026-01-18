@@ -1,20 +1,20 @@
 import { Policy, type ApiResponse, type CreateObjectResult, type PHID } from "./phorge.js"
 import * as z from "zod"
 
-export const Icon = z.object({
+export const ProjectIcon = z.object({
     key: z.string(),
     name: z.string(),
     icon: z.string()
 })
 
-export type Icon = z.infer<typeof Icon>
+export type ProjectIcon = z.infer<typeof ProjectIcon>
 
-export const Color = z.object({
+export const ProjectColor = z.object({
     key: z.string(),
     name: z.string(),
 })
 
-export type Color = z.infer<typeof Color>
+export type ProjectColor = z.infer<typeof ProjectColor>
 
 
 export const ProjectConstraints = z.object({
@@ -54,7 +54,7 @@ export const ProjectSearchOptions = z.object({
 
 export type ProjectSearchOptions = z.infer<typeof ProjectSearchOptions>
 
-export const SearchProjectResult = z.object({
+export const Project = z.object({
     id: z.number(),
     type: z.literal("PROJ"),
     phid: z.custom<PHID<"PROJ">>(),
@@ -65,8 +65,8 @@ export const SearchProjectResult = z.object({
         milestone: z.number().nullable(),
         depth: z.number(),
         parent: z.custom<PHID<"PROJ">>().nullable(),
-        icon: z.custom<Icon>(),
-        color: z.custom<Color>(),
+        icon: z.custom<ProjectIcon>(),
+        color: z.custom<ProjectColor>(),
         status: z.enum(["active", "archived", "all"]),
         spacePHID: z.custom<PHID<"SPCE">>().nullable(),
         dateCreated: z.number(),
@@ -91,110 +91,110 @@ export const SearchProjectResult = z.object({
     })
 })
 
-export type SearchProjectResult = z.infer<typeof SearchProjectResult>
+export type Project = z.infer<typeof Project>
 
 export type CreateProjectResponse = ApiResponse<{ object: CreateObjectResult }>
-export type SearchProjectResponse = ApiResponse<{ data: SearchProjectResult[] }>
+export type SearchProjectResponse = ApiResponse<{ data: Project[] }>
 
-// Edit Transactions
+// Update Transactions
 
-export const ProjectEditParentTransaction = z.object({
+export const ProjectUpdateParentTransaction = z.object({
     type: z.literal("parent"),
     value: z.custom<PHID<"PROJ">>(),
 });
 
-export const ProjectEditMilestoneTransaction = z.object({
+export const ProjectUpdateMilestoneTransaction = z.object({
     type: z.literal("milestone"),
     value: z.custom<PHID<"PROJ">>(),
 });
 
-export const ProjectEditSpaceTransaction = z.object({
+export const ProjectUpdateSpaceTransaction = z.object({
     type: z.literal("space"),
     value: z.custom<PHID<"SPCE">>(),
 });
 
-export const ProjectEditNameTransaction = z.object({
+export const ProjectUpdateNameTransaction = z.object({
     type: z.literal("name"),
     value: z.string(),
 });
 
-export const ProjectEditDescriptionTransaction = z.object({
+export const ProjectUpdateDescriptionTransaction = z.object({
     type: z.literal("description"),
     value: z.string(),
 });
 
-export const ProjectEditIconTransaction = z.object({
+export const ProjectUpdateIconTransaction = z.object({
     type: z.literal("icon"),
     value: z.string(),
 });
 
-export const ProjectEditColorTransaction = z.object({
+export const ProjectUpdateColorTransaction = z.object({
     type: z.literal("color"),
     value: z.string(),
 });
 
-export const ProjectEditSlugsTransaction = z.object({
+export const ProjectUpdateSlugsTransaction = z.object({
     type: z.literal("slugs"),
     value: z.array(z.string()),
 });
 
-export const ProjectEditMembersAddTransaction = z.object({
+export const ProjectUpdateMembersAddTransaction = z.object({
     type: z.literal("members.add"),
     value: z.array(z.custom<PHID<"USER">>()),
 });
 
-export const ProjectEditMembersRemoveTransaction = z.object({
+export const ProjectUpdateMembersRemoveTransaction = z.object({
     type: z.literal("members.remove"),
     value: z.array(z.custom<PHID<"USER">>()),
 });
 
-export const ProjectEditMembersSetTransaction = z.object({
+export const ProjectUpdateMembersSetTransaction = z.object({
     type: z.literal("members.set"),
     value: z.array(z.custom<PHID<"USER">>()),
 });
 
-export const ProjectEditViewTransaction = z.object({
+export const ProjectUpdateViewTransaction = z.object({
     type: z.literal("view"),
     value: z.string(),
 });
 
-export const ProjectEditEditTransaction = z.object({
+export const ProjectUpdateEditTransaction = z.object({
     type: z.literal("edit"),
     value: z.string(),
 });
 
-export const ProjectEditJoinTransaction = z.object({
+export const ProjectUpdateJoinTransaction = z.object({
     type: z.literal("join"),
     value: z.string(),
 });
 
-export const ProjectEditSubtypeTransaction = z.object({
+export const ProjectUpdateSubtypeTransaction = z.object({
     type: z.literal("subtype"),
     value: z.string(),
 });
 
-export const ProjectEditMfaTransaction = z.object({
+export const ProjectUpdateMfaTransaction = z.object({
     type: z.literal("mfa"),
     value: z.boolean(),
 });
 
-export const ProjectEditTransaction = z.union([
-    ProjectEditParentTransaction,
-    ProjectEditMilestoneTransaction,
-    ProjectEditSpaceTransaction,
-    ProjectEditNameTransaction,
-    ProjectEditDescriptionTransaction,
-    ProjectEditIconTransaction,
-    ProjectEditColorTransaction,
-    ProjectEditSlugsTransaction,
-    ProjectEditMembersAddTransaction,
-    ProjectEditMembersRemoveTransaction,
-    ProjectEditMembersSetTransaction,
-    ProjectEditViewTransaction,
-    ProjectEditEditTransaction,
-    ProjectEditJoinTransaction,
-    ProjectEditSubtypeTransaction,
-    ProjectEditMfaTransaction,
+export const ProjectUpdateTransaction = z.union([
+    ProjectUpdateParentTransaction,
+    ProjectUpdateMilestoneTransaction,
+    ProjectUpdateSpaceTransaction,
+    ProjectUpdateNameTransaction,
+    ProjectUpdateDescriptionTransaction,
+    ProjectUpdateIconTransaction,
+    ProjectUpdateColorTransaction,
+    ProjectUpdateSlugsTransaction,
+    ProjectUpdateMembersAddTransaction,
+    ProjectUpdateMembersRemoveTransaction,
+    ProjectUpdateMembersSetTransaction,
+    ProjectUpdateViewTransaction,
+    ProjectUpdateEditTransaction,
+    ProjectUpdateJoinTransaction,
+    ProjectUpdateSubtypeTransaction,
+    ProjectUpdateMfaTransaction,
 ]);
 
-export type ProjectEditTransaction = z.infer<typeof ProjectEditTransaction>;
+export type ProjectUpdateTransaction = z.infer<typeof ProjectUpdateTransaction>;

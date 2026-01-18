@@ -33,7 +33,7 @@ export const UserSearchOptions = z.object({
 
 export type UserSearchOptions = z.infer<typeof UserSearchOptions>
 
-export const SearchUserResult = z.object({
+export const User = z.object({
     id: z.number(),
     type: z.literal("USER"),
     phid: z.custom<PHID<"USER">>(),
@@ -46,9 +46,9 @@ export const SearchUserResult = z.object({
         policy: Policy
     }),
     attachments: z.unknown()
-}).array()
+})
 
-export type SearchUserResult = z.infer<typeof SearchUserResult>
+export type User = z.infer<typeof User>
 
 export type CreateUserResponse = ApiResponse<{ object: CreateObjectResult }>
-export type SearchUserResponse = ApiResponse<{ data: SearchUserResult }>
+export type SearchUserResponse = ApiResponse<{ data: User[] }>

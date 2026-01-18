@@ -3,8 +3,8 @@ import createFetchMock from "vitest-fetch-mock";
 
 import { Client } from "./client.js";
 import { PhorgeError } from "./models/phorge.js";
-import { SearchProjectResult } from "./models/project.js";
-import { SearchTaskResult, ManiphestPriority, ManiphestStatus } from "./models/maniphest.js";
+import { Project } from "./models/project.js";
+import { ManiphestTask, ManiphestPriority, ManiphestStatus } from "./models/maniphest.js";
 
 const fetchMocker = createFetchMock(vi);
 
@@ -19,7 +19,7 @@ describe("Client", () => {
 
     describe("searchProject", () => {
         test("should return a list of projects on success", async () => {
-            const mockResponse: SearchProjectResult[] = [
+            const mockResponse: Project[] = [
                 {
                     id: 1,
                     type: "PROJ",
@@ -59,7 +59,7 @@ describe("Client", () => {
         });
 
         test("should return a list of projects with attachments on success", async () => {
-            const mockResponse: SearchProjectResult[] = [
+            const mockResponse: Project[] = [
                 {
                     id: 1,
                     type: "PROJ",
@@ -145,13 +145,13 @@ describe("Client", () => {
         });
     });
 
-    describe("editProject", () => {
+    describe("updateProject", () => {
         test("should return an updated project object on success", async () => {
             const mockResponse = { id: "1", phid: "PHID-PROJ-123" };
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
 
-            const updatedProject = await client.editProject("PHID-PROJ-123", [{ type: "name", value: "Updated Project" }]);
+            const updatedProject = await client.updateProject("PHID-PROJ-123", [{ type: "name", value: "Updated Project" }]);
 
             expect(updatedProject).toEqual(mockResponse);
         });
@@ -159,13 +159,13 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
-            await expect(client.editProject("PHID-PROJ-123", [{ type: "name", value: "Updated Project" }])).rejects.toThrow(PhorgeError);
+            await expect(client.updateProject("PHID-PROJ-123", [{ type: "name", value: "Updated Project" }])).rejects.toThrow(PhorgeError);
         });
     });
 
-    describe("searchTask", () => {
+    describe("searchManiphest", () => {
         test("should return a list of tasks on success", async () => {
-            const mockResponse: SearchTaskResult[] = [
+            const mockResponse: ManiphestTask[] = [
                 {
                     id: 11,
                     type: "TASK",
@@ -221,7 +221,7 @@ describe("Client", () => {
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
 
-            const tasks = await client.searchTask();
+            const tasks = await client.searchManiphest();
 
             expect(tasks).toEqual(mockResponse);
         });
@@ -229,17 +229,17 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_NOT_FOUND", error_info: "Task not found" }));
 
-            await expect(client.searchTask()).rejects.toThrow(PhorgeError);
+            await expect(client.searchManiphest()).rejects.toThrow(PhorgeError);
         });
     });
 
-    describe("createTask", () => {
+    describe("createManiphest", () => {
         test("should return a new task object on success", async () => {
             const mockResponse = { id: "2", phid: "PHID-TASK-456" };
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
 
-            const newTask = await client.createTask([{ type: "title", value: "New Task" }]);
+            const newTask = await client.createManiphest([{ type: "title", value: "New Task" }]);
 
             expect(newTask).toEqual(mockResponse);
         });
@@ -247,7 +247,7 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
-            await expect(client.createTask([{ type: "title", value: "New Task" }])).rejects.toThrow(PhorgeError);
+            await expect(client.createManiphest([{ type: "title", value: "New Task" }])).rejects.toThrow(PhorgeError);
         });
     });
 
@@ -288,13 +288,13 @@ describe("Client", () => {
         });
     });
 
-    describe("updateTask", () => {
+    describe("updateManiphest", () => {
         test("should return an updated task object on success", async () => {
             const mockResponse = { id: "1", phid: "PHID-TASK-123" };
 
             fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
 
-            const updatedTask = await client.updateTask("PHID-TASK-123", [{ type: "title", value: "Updated Task" }]);
+            const updatedTask = await client.updateManiphest("PHID-TASK-123", [{ type: "title", value: "Updated Task" }]);
 
             expect(updatedTask).toEqual(mockResponse);
         });
@@ -302,7 +302,7 @@ describe("Client", () => {
         test("should throw a PhorgeError on failure", async () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
-            await expect(client.updateTask("PHID-TASK-122", [{ type: "title", value: "Updated Task" }])).rejects.toThrow(PhorgeError);
+            await expect(client.updateManiphest("PHID-TASK-122", [{ type: "title", value: "Updated Task" }])).rejects.toThrow(PhorgeError);
         });
     });
 

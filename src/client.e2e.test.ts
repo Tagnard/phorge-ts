@@ -38,9 +38,9 @@ describe("Client E2E", () => {
         expect(projects[0]!.fields.name).toBe(projectName);
     });
 
-    test("should edit a project", async () => {
+    test("should update a project", async () => {
         const updatedName = `${projectName} Updated`;
-        await client.editProject(projectPHID, [
+        await client.updateProject(projectPHID, [
             { type: "name", value: updatedName }
         ]);
 
@@ -51,7 +51,7 @@ describe("Client E2E", () => {
     });
 
     test("should create a task", async () => {
-        const result = await client.createTask([
+        const result = await client.createManiphest([
             { type: "title", value: taskTitle },
             { type: "description", value: "E2E Test Task" },
             { type: "projects.add", value: [projectPHID] }
@@ -59,7 +59,7 @@ describe("Client E2E", () => {
         expect(result.phid).toBeDefined();
         taskPHID = result.phid as PHID<"TASK">;
 
-        const tasks = await client.searchTask({
+        const tasks = await client.searchManiphest({
             constraints: { phids: [taskPHID] },
             attachments: { projects: true }
         });
@@ -70,11 +70,11 @@ describe("Client E2E", () => {
 
     test("should update a task", async () => {
         const updatedTitle = `${taskTitle} Updated`;
-        await client.updateTask(taskPHID, [
+        await client.updateManiphest(taskPHID, [
             { type: "title", value: updatedTitle }
         ]);
 
-        const tasks = await client.searchTask({
+        const tasks = await client.searchManiphest({
             constraints: { phids: [taskPHID] }
         });
         expect(tasks[0]!.fields.name).toBe(updatedTitle);
@@ -110,11 +110,11 @@ describe("Client E2E", () => {
     test("cleanup: close task", async () => {
         if (!taskPHID) return;
 
-        await client.updateTask(taskPHID, [
+        await client.updateManiphest(taskPHID, [
             { type: "status", value: "closed" }
         ]);
 
-        const tasks = await client.searchTask({
+        const tasks = await client.searchManiphest({
             constraints: { phids: [taskPHID] }
         });
         expect(tasks[0]!.fields.status.value).toBe("closed");

@@ -1,6 +1,5 @@
 export function ConstraintObjectToParams(obj: Record<string, any>, params: URLSearchParams, prefix = ""): void {
     for (const [k, v] of Object.entries(obj)) {
-        console.log(k, v)
         if (Array.isArray(v)) {
             let index = 0;
             v.forEach((item: string, j: number) => {
@@ -15,7 +14,7 @@ export function ConstraintObjectToParams(obj: Record<string, any>, params: URLSe
     }
 }
 
-export function EditTransactionObjectToParams(transactions: Record<string, any>[], params: URLSearchParams): void {
+export function UpdateTransactionObjectToParams(transactions: Record<string, any>[], params: URLSearchParams): void {
     transactions.forEach((transaction, index) => {
         const typeKey = `transactions[${index}][type]`;
         const valueKey = `transactions[${index}][value]`;

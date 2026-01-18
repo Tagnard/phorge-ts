@@ -1,12 +1,12 @@
-import { TaskSearchOptions, SearchTaskResult, ManiphestStatus, SearchManiphestStatusResult, ManiphestPriority } from "./models/maniphest.js";
+import { ManiphestSearchOptions, ManiphestTask, ManiphestStatus, ManiphestPriority } from "./models/maniphest.js";
 import { PhorgeError, CreateObjectResult, type PHID } from "./models/phorge.js";
-import { SearchProjectResult, ProjectSearchOptions, ProjectEditTransaction } from "./models/project.js";
-import { SearchTransactionResult, TransactionSearchOptions } from "./models/transaction.js";
-import { SearchUserResult, UserSearchOptions } from "./models/user.js";
-import { AttachmentsObjectToParams, ConstraintObjectToParams, EditTransactionObjectToParams } from "./utils.js";
+import { Project, ProjectSearchOptions, ProjectUpdateTransaction } from "./models/project.js";
+import { Transaction, TransactionSearchOptions } from "./models/transaction.js";
+import { User, UserSearchOptions } from "./models/user.js";
+import { AttachmentsObjectToParams, ConstraintObjectToParams, UpdateTransactionObjectToParams } from "./utils.js";
 
 // Import types only
-import type { SearchTaskResponse, TaskTransaction, CreateTaskResponse, SearchManiphestStatusResponse, SearchManiphestPriorityResponse } from "./models/maniphest.js";
+import type { SearchManiphestResponse, ManiphestUpdateTransaction, CreateManiphestResponse, SearchManiphestStatusResponse, SearchManiphestPriorityResponse } from "./models/maniphest.js";
 import type { SearchProjectResponse, CreateProjectResponse } from "./models/project.js"
 import type { SearchTransactionResponse } from "./models/transaction.js";
 import type { SearchUserResponse } from "./models/user.js";
@@ -26,7 +26,7 @@ export class Client {
         return await resp.json();
     }
 
-    async searchProject(options?: ProjectSearchOptions): Promise<SearchProjectResult[]> {
+    async searchProject(options?: ProjectSearchOptions): Promise<Project[]> {
         let params = new URLSearchParams()
         if (options !== undefined) {
             if (options.queryKey) {
@@ -68,9 +68,9 @@ export class Client {
         }
     }
 
-    async editProject(phid: PHID<"PROJ">, transactions: ProjectEditTransaction[]): Promise<CreateObjectResult> {
+    async updateProject(phid: PHID<"PROJ">, transactions: ProjectUpdateTransaction[]): Promise<CreateObjectResult> {
         let params = new URLSearchParams()
-        EditTransactionObjectToParams(transactions, params);
+        UpdateTransactionObjectToParams(transactions, params);
         params.append("objectIdentifier", phid);
         params.append("api.token", this.token);
 
@@ -82,9 +82,9 @@ export class Client {
         }
     }
 
-    async createProject(transactions: ProjectEditTransaction[]): Promise<CreateObjectResult> {
+    async createProject(transactions: ProjectUpdateTransaction[]): Promise<CreateObjectResult> {
         let params = new URLSearchParams()
-        EditTransactionObjectToParams(transactions, params)
+        UpdateTransactionObjectToParams(transactions, params)
         params.append("api.token", this.token);
 
         const resp = await this.call<CreateProjectResponse>("project.edit", params);
@@ -104,11 +104,11 @@ export class Client {
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
-            return ManiphestPriority.array().parse(resp.result.data);
+            return resp.result.data;
         }
     }
 
-    async searchTask(options?: TaskSearchOptions): Promise<SearchTaskResult[]> {
+    async searchManiphest(options?: ManiphestSearchOptions): Promise<ManiphestTask[]> {
         let params = new URLSearchParams()
         if (options !== undefined) {
             if (options.queryKey) {
@@ -142,7 +142,7 @@ export class Client {
 
         params.append("api.token", this.token);
 
-        const resp = await this.call<SearchTaskResponse>("maniphest.search", params);
+        const resp = await this.call<SearchManiphestResponse>("maniphest.search", params);
 
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
@@ -151,12 +151,12 @@ export class Client {
         }
     }
 
-    async createTask(transactions: TaskTransaction[]): Promise<CreateObjectResult> {
+    async createManiphest(transactions: ManiphestUpdateTransaction[]): Promise<CreateObjectResult> {
         let params = new URLSearchParams()
-        EditTransactionObjectToParams(transactions, params)
+        UpdateTransactionObjectToParams(transactions, params)
         params.append("api.token", this.token);
 
-        const resp = await this.call<CreateTaskResponse>("maniphest.edit", params);
+        const resp = await this.call<CreateManiphestResponse>("maniphest.edit", params);
 
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
@@ -165,13 +165,13 @@ export class Client {
         }
     }
 
-    async updateTask(phid: PHID<"TASK">, transactions: TaskTransaction[]): Promise<CreateObjectResult> {
+    async updateManiphest(phid: PHID<"TASK">, transactions: ManiphestUpdateTransaction[]): Promise<CreateObjectResult> {
         let params = new URLSearchParams()
-        EditTransactionObjectToParams(transactions, params)
+        UpdateTransactionObjectToParams(transactions, params)
         params.append("objectIdentifier", phid);
         params.append("api.token", this.token);
 
-        const resp = await this.call<CreateTaskResponse>("maniphest.edit", params);
+        const resp = await this.call<CreateManiphestResponse>("maniphest.edit", params);
 
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
@@ -180,7 +180,7 @@ export class Client {
         }
     }
 
-    async searchUser(options?: UserSearchOptions): Promise<SearchUserResult> {
+    async searchUser(options?: UserSearchOptions): Promise<User[]> {
         let params = new URLSearchParams()
         params.append("api.token", this.token);
         if (options !== undefined) {
@@ -213,11 +213,11 @@ export class Client {
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
-            return SearchUserResult.parse(resp.result.data);
+            return resp.result.data;
         }
     }
 
-    async searchTransaction(options?: TransactionSearchOptions): Promise<SearchTransactionResult> {
+    async searchTransaction(options?: TransactionSearchOptions): Promise<Transaction[]> {
         let params = new URLSearchParams()
         params.append("api.token", this.token);
         if (options !== undefined) {
@@ -245,11 +245,11 @@ export class Client {
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
-            return SearchTransactionResult.parse(resp.result.data);
+            return resp.result.data;
         }
     }
 
-    async searchManiphestStatus(): Promise<SearchManiphestStatusResult> {
+    async searchManiphestStatus(): Promise<ManiphestStatus[]> {
         let params = new URLSearchParams();
         params.append("api.token", this.token);
 
@@ -258,7 +258,7 @@ export class Client {
         if (resp.error_code !== null) {
             throw new PhorgeError(resp.error_code, resp.error_info);
         } else {
-            return SearchManiphestStatusResult.parse(resp.result.data);
+            return resp.result.data;
         }
     }
 }

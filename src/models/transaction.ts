@@ -32,7 +32,7 @@ export const TransactionComment = z.object({
 
 export type TransactionComment = z.infer<typeof TransactionComment>
 
-export const SearchTransactionResult = z.object({
+export const Transaction = z.object({
     id: z.number(),
     phid: z.string(),
     type: z.string().nullable(),
@@ -42,8 +42,8 @@ export const SearchTransactionResult = z.object({
     dateModified: z.number(),
     groupID: z.string(),
     comments: TransactionComment.array()
-}).array();
+});
 
-export type SearchTransactionResult = z.infer<typeof SearchTransactionResult>
+export type Transaction = z.infer<typeof Transaction>
 
-export type SearchTransactionResponse = ApiResponse<{ data: SearchTransactionResult[] }>
+export type SearchTransactionResponse = ApiResponse<{ data: Transaction[] }>
