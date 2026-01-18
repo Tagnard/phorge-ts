@@ -4,7 +4,7 @@ import createFetchMock from "vitest-fetch-mock";
 import { Client } from "./client.js";
 import { PhorgeError } from "./models/phorge.js";
 import { SearchProjectResult } from "./models/project.js";
-import { SearchTaskResult } from "./models/maniphest.js";
+import { SearchTaskResult, ManiphestPriority } from "./models/maniphest.js";
 
 const fetchMocker = createFetchMock(vi);
 
@@ -248,6 +248,43 @@ describe("Client", () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid data" }));
 
             await expect(client.createTask([{ type: "title", value: "New Task" }])).rejects.toThrow(PhorgeError);
+        });
+    });
+
+    describe("searchManiphestPriority", () => {
+        test("should return a list of priorities on success", async () => {
+            const mockResponse: ManiphestPriority[] = [
+                {
+                    "name": "Unbreak Now!",
+                    "keywords": [
+                        "unbreak"
+                    ],
+                    "short": "Unbreak!",
+                    "color": "pink",
+                    "value": 100
+                },
+                {
+                    "name": "Needs Triage",
+                    "keywords": [
+                        "triage"
+                    ],
+                    "short": "Triage",
+                    "color": "violet",
+                    "value": 90
+                }
+            ];
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
+
+            const priorities = await client.searchManiphestPriority();
+
+            expect(priorities).toEqual(mockResponse);
+        });
+
+        test("should throw a PhorgeError on failure", async () => {
+            fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_INVALID", error_info: "Invalid request" }));
+
+            await expect(client.searchManiphestPriority()).rejects.toThrow(PhorgeError);
         });
     });
 
