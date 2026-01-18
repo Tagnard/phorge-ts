@@ -35,7 +35,7 @@ const client = new Client('https://phorge.example.com', 'api-token-...');
 
 async function getOpenTasks() {
     try {
-        const tasks = await client.searchTask({
+        const tasks = await client.searchManiphest({
             constraints: {
                 statuses: ['open'],
             },
@@ -62,7 +62,7 @@ const client = new Client('https://phorge.example.com', 'api-token-...');
 
 async function createNewTask() {
     try {
-        const newTask = await client.createTask([
+        const newTask = await client.createManiphest([
             { type: 'title', value: 'New Task Title' },
             { type: 'description', value: 'Description of the new task.' },
             { type: 'priority', value: 80 }, // High priority
@@ -97,15 +97,15 @@ async function searchProjects() {
 The client currently supports the following methods:
 
 - **Maniphest (Tasks)**
-    - `searchTask(options?)`
-    - `createTask(transactions)`
-    - `updateTask(phid, transactions)`
+    - `searchManiphest(options?)`
+    - `createManiphest(transactions)`
+    - `updateManiphest(phid, transactions)`
     - `searchManiphestPriority()`
     - `searchManiphestStatus()`
 - **Project**
     - `searchProject(options?)`
     - `createProject(transactions)`
-    - `editProject(phid, transactions)`
+    - `updateProject(phid, transactions)`
 - **User**
     - `searchUser(options?)`
 - **Transaction**
