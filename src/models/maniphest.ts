@@ -2,180 +2,180 @@ import * as z from "zod"
 import { Policy, type ApiResponse, type PHID } from "./phorge.js";
 import { CreateObjectResult } from "./phorge.js";
 
-export const TaskParentTransaction = z.object({
+export const ManiphestTaskParentTransaction = z.object({
     type: z.literal("parent"),
     value: z.custom<PHID<"TASK">>(),
 });
 
-export const TaskColumnTransaction = z.object({
+export const ManiphestTaskColumnTransaction = z.object({
     type: z.literal("column"),
     value: z.custom<PHID<"COLN">>(),
 });
 
-export const TaskSpaceTransaction = z.object({
+export const ManiphestTaskSpaceTransaction = z.object({
     type: z.literal("space"),
     value: z.custom<PHID<"SPCE">>(),
 });
 
-export const TaskTitleTransaction = z.object({
+export const ManiphestTaskTitleTransaction = z.object({
     type: z.literal("title"),
     value: z.string(),
 });
 
-export const TaskOwnerTransaction = z.object({
+export const ManiphestTaskOwnerTransaction = z.object({
     type: z.literal("owner"),
     value: z.custom<PHID<"USER">>(),
 });
 
-export const TaskStatusTransaction = z.object({
+export const ManiphestTaskStatusTransaction = z.object({
     type: z.literal("status"),
     value: z.string(),
 });
 
-export const TaskPriorityTransaction = z.object({
+export const ManiphestTaskPriorityTransaction = z.object({
     type: z.literal("priority"),
     value: z.string(),
 });
 
-export const TaskDescriptionTransaction = z.object({
+export const ManiphestTaskDescriptionTransaction = z.object({
     type: z.literal("description"),
     value: z.string(),
 });
 
-export const TaskParentsAddTransaction = z.object({
+export const ManiphestTaskParentsAddTransaction = z.object({
     type: z.literal("parents.add"),
     value: z.array(z.custom<PHID<"TASK">>()),
 });
 
-export const TaskParentsRemoveTransaction = z.object({
+export const ManiphestTaskParentsRemoveTransaction = z.object({
     type: z.literal("parents.remove"),
     value: z.array(z.custom<PHID<"TASK">>()),
 });
 
-export const TaskParentsSetTransaction = z.object({
+export const ManiphestTaskParentsSetTransaction = z.object({
     type: z.literal("parents.set"),
     value: z.array(z.custom<PHID<"TASK">>()),
 });
 
-export const TaskSubtasksAddTransaction = z.object({
+export const ManiphestTaskSubtasksAddTransaction = z.object({
     type: z.literal("subtasks.add"),
     value: z.array(z.custom<PHID<"TASK">>()),
 });
 
-export const TaskSubtasksRemoveTransaction = z.object({
+export const ManiphestTaskSubtasksRemoveTransaction = z.object({
     type: z.literal("subtasks.remove"),
     value: z.array(z.custom<PHID<"TASK">>()),
 });
 
-export const TaskSubtasksSetTransaction = z.object({
+export const ManiphestTaskSubtasksSetTransaction = z.object({
     type: z.literal("subtasks.set"),
     value: z.array(z.custom<PHID<"TASK">>()),
 });
 
-export const TaskCommitsAddTransaction = z.object({
+export const ManiphestTaskCommitsAddTransaction = z.object({
     type: z.literal("commits.add"),
     value: z.array(z.custom<PHID<"CMIT">>()),
 });
 
-export const TaskCommitsRemoveTransaction = z.object({
+export const ManiphestTaskCommitsRemoveTransaction = z.object({
     type: z.literal("commits.remove"),
     value: z.array(z.custom<PHID<"CMIT">>()),
 });
 
-export const TaskCommitsSetTransaction = z.object({
+export const ManiphestTaskCommitsSetTransaction = z.object({
     type: z.literal("commits.set"),
     value: z.array(z.custom<PHID<"CMIT">>()),
 });
 
-export const TaskViewTransaction = z.object({
+export const ManiphestTaskViewTransaction = z.object({
     type: z.literal("view"),
     value: z.string(),
 });
 
-export const TaskEditTransaction = z.object({
+export const ManiphestTaskEditTransaction = z.object({
     type: z.literal("edit"),
     value: z.string(),
 });
 
-export const TaskProjectsAddTransaction = z.object({
+export const ManiphestTaskProjectsAddTransaction = z.object({
     type: z.literal("projects.add"),
     value: z.array(z.custom<PHID<"PROJ">>()),
 });
 
-export const TaskProjectsRemoveTransaction = z.object({
+export const ManiphestTaskProjectsRemoveTransaction = z.object({
     type: z.literal("projects.remove"),
     value: z.array(z.custom<PHID<"PROJ">>()),
 });
 
-export const TaskProjectsSetTransaction = z.object({
+export const ManiphestTaskProjectsSetTransaction = z.object({
     type: z.literal("projects.set"),
     value: z.array(z.custom<PHID<"PROJ">>()),
 });
 
-export const TaskSubscribersAddTransaction = z.object({
+export const ManiphestTaskSubscribersAddTransaction = z.object({
     type: z.literal("subscribers.add"),
     value: z.array(z.custom<PHID<"USER">>()),
 });
 
-export const TaskSubscribersRemoveTransaction = z.object({
+export const ManiphestTaskSubscribersRemoveTransaction = z.object({
     type: z.literal("subscribers.remove"),
     value: z.array(z.custom<PHID<"USER">>()),
 });
 
-export const TaskSubscribersSetTransaction = z.object({
+export const ManiphestTaskSubscribersSetTransaction = z.object({
     type: z.literal("subscribers.set"),
     value: z.array(z.custom<PHID<"USER">>()),
 });
 
-export const TaskSubtypeTransaction = z.object({
+export const ManiphestTaskSubtypeTransaction = z.object({
     type: z.literal("subtype"),
     value: z.string(),
 });
 
-export const TaskCommentTransaction = z.object({
+export const ManiphestTaskCommentTransaction = z.object({
     type: z.literal("comment"),
     value: z.string(),
 });
 
-export const TaskMfaTransaction = z.object({
+export const ManiphestTaskMfaTransaction = z.object({
     type: z.literal("mfa"),
     value: z.string(),
 });
 
-export const TaskTransaction = z.union([
-    TaskParentTransaction,
-    TaskColumnTransaction,
-    TaskSpaceTransaction,
-    TaskTitleTransaction,
-    TaskOwnerTransaction,
-    TaskStatusTransaction,
-    TaskPriorityTransaction,
-    TaskDescriptionTransaction,
-    TaskParentsAddTransaction,
-    TaskParentsRemoveTransaction,
-    TaskParentsSetTransaction,
-    TaskSubtasksAddTransaction,
-    TaskSubtasksRemoveTransaction,
-    TaskSubtasksSetTransaction,
-    TaskCommitsAddTransaction,
-    TaskCommitsRemoveTransaction,
-    TaskCommitsSetTransaction,
-    TaskViewTransaction,
-    TaskEditTransaction,
-    TaskProjectsAddTransaction,
-    TaskProjectsRemoveTransaction,
-    TaskProjectsSetTransaction,
-    TaskSubscribersAddTransaction,
-    TaskSubscribersRemoveTransaction,
-    TaskSubscribersSetTransaction,
-    TaskSubtypeTransaction,
-    TaskCommentTransaction,
-    TaskMfaTransaction,
+export const ManiphestUpdateTransaction = z.union([
+    ManiphestTaskParentTransaction,
+    ManiphestTaskColumnTransaction,
+    ManiphestTaskSpaceTransaction,
+    ManiphestTaskTitleTransaction,
+    ManiphestTaskOwnerTransaction,
+    ManiphestTaskStatusTransaction,
+    ManiphestTaskPriorityTransaction,
+    ManiphestTaskDescriptionTransaction,
+    ManiphestTaskParentsAddTransaction,
+    ManiphestTaskParentsRemoveTransaction,
+    ManiphestTaskParentsSetTransaction,
+    ManiphestTaskSubtasksAddTransaction,
+    ManiphestTaskSubtasksRemoveTransaction,
+    ManiphestTaskSubtasksSetTransaction,
+    ManiphestTaskCommitsAddTransaction,
+    ManiphestTaskCommitsRemoveTransaction,
+    ManiphestTaskCommitsSetTransaction,
+    ManiphestTaskViewTransaction,
+    ManiphestTaskEditTransaction,
+    ManiphestTaskProjectsAddTransaction,
+    ManiphestTaskProjectsRemoveTransaction,
+    ManiphestTaskProjectsSetTransaction,
+    ManiphestTaskSubscribersAddTransaction,
+    ManiphestTaskSubscribersRemoveTransaction,
+    ManiphestTaskSubscribersSetTransaction,
+    ManiphestTaskSubtypeTransaction,
+    ManiphestTaskCommentTransaction,
+    ManiphestTaskMfaTransaction,
 ]);
 
-export type TaskTransaction = z.infer<typeof TaskTransaction>;
+export type ManiphestUpdateTransaction = z.infer<typeof ManiphestUpdateTransaction>;
 
-export const TaskConstraints = z.object({
+export const ManiphestConstraints = z.object({
     ids: z.number().array().optional(),
     phids: z.custom<PHID<"TASK">>().array().optional(),
     assigned: z.custom<PHID<"USER">>().array().optional(),
@@ -201,9 +201,9 @@ export const TaskConstraints = z.object({
     projects: z.custom<PHID<"PROJ">>().array().optional(),
 })
 
-export type TaskConstraints = z.infer<typeof TaskConstraints>
+export type ManiphestConstraints = z.infer<typeof ManiphestConstraints>
 
-export const SearchTaskResult = z.object({
+export const ManiphestTask = z.object({
     id: z.number(),
     type: z.literal("TASK"),
     phid: z.custom<PHID<"TASK">>(),
@@ -247,11 +247,11 @@ export const SearchTaskResult = z.object({
     })
 })
 
-export type SearchTaskResult = z.infer<typeof SearchTaskResult>
+export type ManiphestTask = z.infer<typeof ManiphestTask>
 
-export const TaskSearchOptions = z.object({
+export const ManiphestSearchOptions = z.object({
     queryKey: z.string().optional(),
-    constraints: z.custom<TaskConstraints>().optional(),
+    constraints: z.custom<ManiphestConstraints>().optional(),
     attachments: z.object({
         columns: z.boolean().optional(),
         projects: z.boolean().optional(),
@@ -263,7 +263,7 @@ export const TaskSearchOptions = z.object({
     limit: z.number().optional()
 })
 
-export type TaskSearchOptions = z.infer<typeof TaskSearchOptions>
+export type ManiphestSearchOptions = z.infer<typeof ManiphestSearchOptions>
 
 export const ManiphestPriority = z.object({
     name: z.string(),
@@ -284,11 +284,7 @@ export const ManiphestStatus = z.object({
 
 export type ManiphestStatus = z.infer<typeof ManiphestStatus>
 
-export const SearchManiphestStatusResult = z.array(ManiphestStatus)
-
-export type SearchManiphestStatusResult = z.infer<typeof SearchManiphestStatusResult>
-
-export type CreateTaskResponse = ApiResponse<{ object: CreateObjectResult }>
-export type SearchTaskResponse = ApiResponse<{ data: SearchTaskResult[] }>
+export type CreateManiphestResponse = ApiResponse<{ object: CreateObjectResult }>
+export type SearchManiphestResponse = ApiResponse<{ data: ManiphestTask[] }>
 export type SearchManiphestPriorityResponse = ApiResponse<{ data: ManiphestPriority[] }>
-export type SearchManiphestStatusResponse = ApiResponse<{ data: SearchManiphestStatusResult }>
+export type SearchManiphestStatusResponse = ApiResponse<{ data: ManiphestStatus[] }>
