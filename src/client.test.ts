@@ -4,7 +4,7 @@ import createFetchMock from "vitest-fetch-mock";
 import { Client } from "./client.js";
 import { PhorgeError } from "./models/phorge.js";
 import { SearchProjectResult } from "./models/project.js";
-import { SearchTaskResult, ManiphestPriority } from "./models/maniphest.js";
+import { SearchTaskResult, ManiphestPriority, ManiphestStatus } from "./models/maniphest.js";
 
 const fetchMocker = createFetchMock(vi);
 
@@ -372,6 +372,42 @@ describe("Client", () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_NOT_FOUND", error_info: "Transaction not found" }));
 
             await expect(client.searchTransaction()).rejects.toThrow(PhorgeError);
+        });
+    });
+
+    describe("searchManiphestStatus", () => {
+        test("should return a list of task statuses on success", async () => {
+            const mockResponse: ManiphestStatus[] = [
+                {
+                    "name": "Open",
+                    "value": "open",
+                    "closed": false,
+                    "special": "default"
+                },
+                {
+                    "name": "Resolved",
+                    "value": "resolved",
+                    "closed": true,
+                    "special": "closed"
+                },
+                {
+                    "name": "Wontfix",
+                    "value": "wontfix",
+                    "closed": true
+                }
+            ];
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
+
+            const statuses = await client.searchManiphestStatus();
+
+            expect(statuses).toEqual(mockResponse);
+        });
+
+        test("should throw a PhorgeError on failure", async () => {
+            fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_CONDUIT_CORE", error_info: "Some error" }));
+
+            await expect(client.searchManiphestStatus()).rejects.toThrow(PhorgeError);
         });
     });
 });

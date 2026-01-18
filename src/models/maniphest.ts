@@ -275,6 +275,20 @@ export const ManiphestPriority = z.object({
 
 export type ManiphestPriority = z.infer<typeof ManiphestPriority>;
 
+export const ManiphestStatus = z.object({
+    name: z.string(),
+    value: z.string(),
+    closed: z.boolean(),
+    special: z.string().optional(),
+})
+
+export type ManiphestStatus = z.infer<typeof ManiphestStatus>
+
+export const SearchManiphestStatusResult = z.array(ManiphestStatus)
+
+export type SearchManiphestStatusResult = z.infer<typeof SearchManiphestStatusResult>
+
 export type CreateTaskResponse = ApiResponse<{ object: CreateObjectResult }>
 export type SearchTaskResponse = ApiResponse<{ data: SearchTaskResult[] }>
 export type SearchManiphestPriorityResponse = ApiResponse<{ data: ManiphestPriority[] }>
+export type SearchManiphestStatusResponse = ApiResponse<{ data: SearchManiphestStatusResult }>
