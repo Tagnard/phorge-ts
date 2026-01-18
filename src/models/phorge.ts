@@ -7,7 +7,7 @@ export type ObjectPHID<TYPE extends ObjectType | string = ObjectType> = `PHID-${
 export type TransactionPHID<TYPE extends ObjectType | string = ObjectType> = `PHID-XACT-${TYPE}-${string}`
 export type PHID<TYPE extends ObjectType | string = ObjectType> = ObjectPHID<TYPE> | TransactionPHID<TYPE>
 
-export type ManiphestAPI = "maniphest.search"
+export type ManiphestAPI = "maniphest.search" | "maniphest.status.search"
 export type ProjectAPI = "project.search"
 
 export type PhorgeApis = ManiphestAPI | ProjectAPI

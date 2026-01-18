@@ -267,3 +267,18 @@ export type TaskSearchOptions = z.infer<typeof TaskSearchOptions>
 
 export type CreateTaskResponse = ApiResponse<{ object: CreateObjectResult }>
 export type SearchTaskResponse = ApiResponse<{ data: SearchTaskResult[] }>
+
+export const ManiphestStatus = z.object({
+    name: z.string(),
+    value: z.string(),
+    closed: z.boolean(),
+    special: z.string().optional(),
+})
+
+export type ManiphestStatus = z.infer<typeof ManiphestStatus>
+
+export const SearchManiphestStatusResult = z.array(ManiphestStatus)
+
+export type SearchManiphestStatusResult = z.infer<typeof SearchManiphestStatusResult>
+
+export type SearchManiphestStatusResponse = ApiResponse<{ data: SearchManiphestStatusResult }>
