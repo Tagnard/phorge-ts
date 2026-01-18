@@ -131,4 +131,4 @@ npm run test
 
 ## License
 
-ISC
+Apache-2.0
