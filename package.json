@@ -19,7 +19,9 @@
     "dotenv": "^17.2.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.17",
-    "vitest-fetch-mock": "^0.4.5",
+    "vitest-fetch-mock": "^0.4.5"
+  },
+  "dependencies": {
     "zod": "^4.3.5"
   }
 }
