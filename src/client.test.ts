@@ -5,6 +5,7 @@ import { Client } from "./client.js";
 import { PhorgeError } from "./models/phorge.js";
 import { Project } from "./models/project.js";
 import { ManiphestTask, ManiphestPriority, ManiphestStatus } from "./models/maniphest.js";
+import { PhrictionDocument, PhrictionInfo } from "./models/phriction.js";
 
 const fetchMocker = createFetchMock(vi);
 
@@ -408,6 +409,118 @@ describe("Client", () => {
             fetchMocker.mockResponseOnce(JSON.stringify({ error_code: "ERR_CONDUIT_CORE", error_info: "Some error" }));
 
             await expect(client.searchManiphestStatus()).rejects.toThrow(PhorgeError);
+        });
+    });
+
+    describe("searchPhriction", () => {
+        test("should return a list of documents on success", async () => {
+            const mockResponse: PhrictionDocument[] = [
+                {
+                    id: 1,
+                    type: "WIKI",
+                    phid: "PHID-WIKI-123",
+                    fields: {
+                        path: "test/",
+                        status: { value: "active", name: "Active" },
+                        policy: { view: "public", edit: "users" },
+                    },
+                    attachments: {}
+                }
+            ];
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: { data: mockResponse }, error_code: null, error_info: null }));
+
+            const documents = await client.searchPhriction({
+                order: ["title", "-id"],
+                constraints: { statuses: ["active"] }
+            });
+
+            expect(documents).toEqual(mockResponse);
+            // Verify order param handling
+            const calls = fetchMocker.mock.calls;
+            const params = calls[0][1]!.body as URLSearchParams;
+            expect(params.getAll("order[0]")).toContain("title");
+            expect(params.getAll("order[1]")).toContain("-id");
+            expect(params.get("constraints[statuses][0]")).toBe("active");
+        });
+    });
+
+    describe("createPhriction", () => {
+        test("should return document info on success", async () => {
+            const mockResponse: PhrictionInfo = {
+                phid: "PHID-WIKI-123",
+                uri: "http://example.com/w/test/",
+                slug: "test/",
+                version: 1,
+                authorPHID: "PHID-USER-1",
+                title: "Test Page",
+                content: "Content",
+                status: "exists",
+                description: "Desc",
+                dateCreated: 1234567890
+            };
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: mockResponse, error_code: null, error_info: null }));
+
+            const info = await client.createPhriction({
+                slug: "test/",
+                title: "Test Page",
+                content: "Content",
+                description: "Desc"
+            });
+
+            expect(info).toEqual(mockResponse);
+            const calls = fetchMocker.mock.calls;
+            const params = calls[0][1]!.body as URLSearchParams;
+            expect(params.get("slug")).toBe("test/");
+            expect(params.get("title")).toBe("Test Page");
+            expect(params.get("content")).toBe("Content");
+        });
+    });
+
+    describe("editPhriction", () => {
+        test("should return document info on success", async () => {
+            const mockResponse: PhrictionInfo = {
+                phid: "PHID-WIKI-123",
+                uri: "http://example.com/w/test/",
+                slug: "test/",
+                version: 2,
+                authorPHID: "PHID-USER-1",
+                title: "Test Page Updated",
+                content: "Content Updated",
+                status: "exists",
+                description: "Desc",
+                dateCreated: 1234567890
+            };
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: mockResponse, error_code: null, error_info: null }));
+
+            const info = await client.editPhriction({
+                slug: "test/",
+                content: "Content Updated",
+                title: "Test Page Updated"
+            });
+
+            expect(info).toEqual(mockResponse);
+        });
+    });
+
+    describe("updatePhriction", () => {
+        test("should return object result on success", async () => {
+            const mockResponse = { id: "123", phid: "PHID-WIKI-123" };
+
+            fetchMocker.mockResponseOnce(JSON.stringify({ result: { object: mockResponse }, error_code: null, error_info: null }));
+
+            const result = await client.updatePhriction("PHID-WIKI-123", [
+                { type: "subscribers.add", value: ["PHID-USER-2"] }
+            ]);
+
+            expect(result).toEqual(mockResponse);
+            const calls = fetchMocker.mock.calls;
+            const params = calls[0][1]!.body as URLSearchParams;
+            expect(params.get("objectIdentifier")).toBe("PHID-WIKI-123");
+            expect(params.get("transactions[0][type]")).toBe("subscribers.add");
+            expect(params.get("transactions[0][value][0]")).toBe("PHID-USER-2");
         });
     });
 });
