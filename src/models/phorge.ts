@@ -9,8 +9,9 @@ export type PHID<TYPE extends ObjectType | string = ObjectType> = ObjectPHID<TYP
 
 export type ManiphestAPI = "maniphest.search" | "maniphest.status.search" | "maniphest.priority.search"
 export type ProjectAPI = "project.search"
+export type PhrictionAPI = "phriction.document.search" | "phriction.document.edit" | "phriction.create" | "phriction.edit"
 
-export type PhorgeApis = ManiphestAPI | ProjectAPI
+export type PhorgeApis = ManiphestAPI | ProjectAPI | PhrictionAPI
 
 export const Policy = z.object({
     view: z.string(),
