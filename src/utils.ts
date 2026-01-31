@@ -32,8 +32,11 @@ export function UpdateTransactionObjectToParams(transactions: Record<string, any
 
 
 export function AttachmentsObjectToParams(obj: Record<string, any>, params: URLSearchParams): void {
-    for (const [k, v] of Object.entries(obj)) {
-        const value = typeof v === "string" ? v : JSON.stringify(v);
-        params.append(`attachments[${k}]`, value);
+    for (const k in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+            const v = obj[k];
+            const value = typeof v === "string" ? v : JSON.stringify(v);
+            params.append(`attachments[${k}]`, value);
+        }
     }
 }
